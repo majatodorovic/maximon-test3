@@ -1,0 +1,18 @@
+.filterOverflow::-webkit-scrollbar {
+  height: 5px;
+}
+
+.filterOverflowSm::-webkit-scrollbar {
+  height: 3px;
+}
+
+.filterOverflow::-webkit-scrollbar-thumb,
+.filterOverflowSm::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 50px;
+}
+
+.filterOverflow::-webkit-scrollbar-thumb:hover,
+.filterOverflowSm::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
