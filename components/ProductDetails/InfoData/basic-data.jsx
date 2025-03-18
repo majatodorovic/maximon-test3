@@ -23,7 +23,7 @@ export const BasicData = ({
   setInfoModal,
   color,
   setColor,
-  setNotSelected
+  setNotSelected,
 }) => {
   const { data: product } = useSuspenseQuery({
     queryKey: ["product", path],
@@ -132,9 +132,12 @@ export const BasicData = ({
 
   const productBasicData = product?.data?.item?.basic_data;
   const price = productVariant?.id
-  ? productVariant?.price
-  : product?.data?.item?.price;
-  const discount_number =price?.min?.price?.original ? Math.abs(price?.min?.price?.original - price?.min?.price?.discount): Math.abs(price?.price?.original - price?.price?.discount);
+    ? productVariant?.price
+    : product?.data?.item?.price;
+  const discount_number = price?.min?.price?.original
+    ? Math.abs(price?.min?.price?.original - price?.min?.price?.discount)
+    : Math.abs(price?.price?.original - price?.price?.discount);
+
   return product ? (
     <>
       <script
@@ -181,13 +184,17 @@ export const BasicData = ({
           detailed={true}
         />
       </div>
-      {price.price_defined && (
-        <div className="flex flex-row justify-between w-full">
-          <p> Usteda: &nbsp;{currencyFormat(discount_number)}</p>
-          <p className="font-light">Akcijska cena vazi od: {formatDate(price?.discount?.campaigns[0]?.duration?.from)} do {formatDate(price?.discount?.campaigns[0]?.duration?.to)} </p>
-        </div>
-      )}
-      
+      {price.discount.active &&
+        productVariant?.inventory?.inventory_defined && (
+          <div className="flex flex-row justify-between w-full">
+            <p> Ušteda: &nbsp;{currencyFormat(discount_number)}</p>
+            <p className="font-light">
+              Akcijska cena važi od:{" "}
+              {formatDate(price?.discount?.campaigns[0]?.duration?.from)} do{" "}
+              {formatDate(price?.discount?.campaigns[0]?.duration?.to)}{" "}
+            </p>
+          </div>
+        )}
 
       {product?.product_type === "variant" && (
         <div className="py-[2rem] max-md:py-[1.5rem]">

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { currencyFormat } from "@/helpers/functions";
 import PlusMinusInput from "@/components/PlusMinusInput";
 import Link from "next/link";
-import noImage from '../../public/images/no-image-maximon.webp'
+import noImage from "../../public/images/no-image-maximon.webp";
 
 const CheckoutItems = ({
   id,
@@ -26,7 +26,7 @@ const CheckoutItems = ({
   setIsClosed,
   cart_item_id,
   setSureCheck,
-  setRemoveId
+  setRemoveId,
 }) => {
   const { mutate: removeFromCart, isSuccess: isRemoved } = useRemoveFromCart();
   const {
@@ -49,7 +49,6 @@ const CheckoutItems = ({
     }
   }, [isUpdated, isRemoved]);
 
-
   return (
     <>
       <div
@@ -70,25 +69,25 @@ const CheckoutItems = ({
             alt="cancel"
             width={13}
             height={13}
-            onClick={() => {setIsClosed(false)
-              setRemoveId(id)}
-            }
+            onClick={() => {
+              setIsClosed(false);
+              setRemoveId(cart_item_id);
+            }}
             className="cursor-pointer"
           />
-
         </button>
         <Link href={`/${slug_path}`} className="w-full">
-        <Image
-                    src={image?.[0] ?? noImage}
-                    alt={'Comr'}
-                    sizes={
-                      "(max-width: 639px) 100vw, (max-width: 767px) 100vw, (max-width: 1023px) 100vw, (max-width: 1279px) 100vw, (min-width: 1600px) 50vw"
-                    }
-                    width={0}
-                    height={0}
-                    priority={true}
-                    className={`transition-all duration-200 opacity-100 object-cover w-full h-[300px]`}
-                  />
+          <Image
+            src={image?.[0] ?? noImage}
+            alt={"Comr"}
+            sizes={
+              "(max-width: 639px) 100vw, (max-width: 767px) 100vw, (max-width: 1023px) 100vw, (max-width: 1279px) 100vw, (min-width: 1600px) 50vw"
+            }
+            width={0}
+            height={0}
+            priority={true}
+            className={`transition-all duration-200 opacity-100 object-cover w-full h-[300px]`}
+          />
           {/* <Image
             src={image?.[0] ?? "/comr.png"}
             alt={`Comr`}
@@ -104,9 +103,7 @@ const CheckoutItems = ({
           </h4>
           <div className={`flex items-center flex-col`}>
             <p
-              className={`${
-                className ? className : ""
-              } text-xs font-bold mb-2`}
+              className={`${className ? className : ""} text-xs font-bold mb-2`}
             >
               {currencyFormat(price?.per_item?.total)}
             </p>
@@ -125,13 +122,12 @@ const CheckoutItems = ({
             />
           </div>
         </div>
-        {isClosed && !inventory?.inventory_defined && (
+        {!inventory?.inventory_defined && (
           <div
             className={`absolute bottom-0 left-0 right-0 top-0 h-full w-full bg-black/40`}
           ></div>
         )}
       </div>
-      
     </>
   );
 };

@@ -29,14 +29,14 @@ import { Specifications } from "@/components/ProductDetails/InfoData/specificati
 import { checkIsInStock, checkPrices } from "./prices/functions";
 import { truncateHTML } from "@/helpers/truncateText";
 
-export const ProductInfo = ({ id, path, canonical,color,setColor }) => {
+export const ProductInfo = ({ id, path, canonical, color, setColor }) => {
   const [product, setProduct] = useState();
   const [productVariant, setProductVariant] = useState(null);
   const [tempError, setTempError] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [showLongDescription, setShowLongDescription] = useState(false);
   const [count, setCount] = useState(1);
-  const [notSelected,setNotSelected] = useState(false);
+  const [notSelected, setNotSelected] = useState(false);
   const router = useRouter();
 
   const { mutate: addToCart, isPending } = useAddToCart();
@@ -98,7 +98,7 @@ export const ProductInfo = ({ id, path, canonical,color,setColor }) => {
 
     let is_in_stock = checkIsInStock(inventory);
     let { price_defined } = checkPrices(price);
-    if(notSelected) {
+    if (notSelected) {
       if (is_in_stock && price_defined) {
         addable_data.addable = true;
         addable_data.text = "DODAJ U KORPU";
@@ -202,6 +202,12 @@ export const ProductInfo = ({ id, path, canonical,color,setColor }) => {
     if (product?.product_type === "variant" && productVariant?.id) {
       setText("Dodaj u korpu");
       setText2("Kupi odmah");
+    }
+  }, [productVariant]);
+
+  useEffect(() => {
+    if (productVariant?.variant_key_array.length > 0) {
+      setNotSelected(true);
     }
   }, [productVariant]);
 

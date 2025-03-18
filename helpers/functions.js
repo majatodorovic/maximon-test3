@@ -1,48 +1,48 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export function ScrollToTop() {
-  const { pathname } = useRouter()
+  const { pathname } = useRouter();
 
   useEffect(() => {
-    if (typeof widnow !== 'undefined') window.scrollTo(0, 0)
-  }, [pathname])
+    if (typeof widnow !== "undefined") window.scrollTo(0, 0);
+  }, [pathname]);
 
-  return null
+  return null;
 }
 
 function getWindowDimensions() {
-  if (typeof widnow !== 'undefined') {
-    const { innerWidth: width, innerHeight: height } = window
+  if (typeof widnow !== "undefined") {
+    const { innerWidth: width, innerHeight: height } = window;
     return {
       width,
       height,
-    }
+    };
   }
-  return { width: 0, height: 0 }
+  return { width: 0, height: 0 };
 }
 
 export function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState({
     width: 0,
     height: 0,
-  })
+  });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const { innerWidth: width, innerHeight: height } = window
-      setWindowDimensions({ width, height })
+    if (typeof window !== "undefined") {
+      const { innerWidth: width, innerHeight: height } = window;
+      setWindowDimensions({ width, height });
 
       function handleResize() {
-        setWindowDimensions({ width, height })
+        setWindowDimensions({ width, height });
       }
 
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
-  }, [])
+  }, []);
 
-  return windowDimensions
+  return windowDimensions;
 }
 
 /**
@@ -56,26 +56,26 @@ export function useWindowDimensions() {
  */
 export const currencyFormat = (
   amount,
-  currency = 'rsd',
+  currency = "rsd",
   showFractions = true
 ) => {
   // Guard: no amount
   if (amount == null || isNaN(amount)) {
-    return '-'
+    return "Cena na upit";
   }
 
   // Number of digits to show after the decimal places
-  const decimalDigits = showFractions ? 2 : 0
+  const decimalDigits = showFractions ? 2 : 0;
 
   // Summarize options
   const options = {
     minimumFractionDigits: decimalDigits,
     maximumFractionDigits: decimalDigits,
-  }
+  };
 
   // Format to two decimal places
-  const price = new Intl.NumberFormat('de-DE', options).format(amount)
-  const currencyLabel = currency?.toLocaleUpperCase() ?? ''
+  const price = new Intl.NumberFormat("de-DE", options).format(amount);
+  const currencyLabel = currency?.toLocaleUpperCase() ?? "";
 
-  return `${price} ${currencyLabel}`.trim()
-}
+  return `${price} ${currencyLabel}`.trim();
+};

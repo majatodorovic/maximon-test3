@@ -31,6 +31,7 @@ import Cookies from "js-cookie";
 import Spinner from "@/components/UI/Spinner";
 import { userContext } from "@/context/userContext";
 import FreeDeliveryScale from "./FreeDeliveryScale";
+import noImage from "../../public/images/no-image-maximon.webp";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/navigation";
@@ -50,7 +51,7 @@ export const CheckoutData = ({
   refreshCart,
   refreshSummary,
   dataSummary,
-  token
+  token,
 }) => {
   const {
     data: dataTmp,
@@ -88,7 +89,7 @@ export const CheckoutData = ({
   const [isClosed, setIsClosed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sureCheck, setSureCheck] = useState(false);
-  const [removeId,setRemoveId] = useState();
+  const [removeId, setRemoveId] = useState();
 
   const {
     data,
@@ -191,7 +192,7 @@ export const CheckoutData = ({
         productsOutOfStock.push({
           cart: {
             id: null,
-            item_id: null,
+            cart_item_id: item?.cart?.cart_item_id,
           },
           product: {
             name: item?.product?.basic_data?.name,
@@ -214,7 +215,6 @@ export const CheckoutData = ({
       filterOutProductsOutOfStock(items);
     }
   }, [items]);
-
   const { mutate: removeFromCart, isSuccess } = useRemoveFromCart();
 
   useEffect(() => {
@@ -278,7 +278,9 @@ export const CheckoutData = ({
   const [swiper, setSwiper] = useState(null);
 
   return (
-    <div className={`mt-5 mx-10 grid grid-cols-6 2xl:grid-cols-6 gap-5 2xl:gap-16`}>
+    <div
+      className={`mt-5 mx-10 grid grid-cols-6 2xl:grid-cols-6 gap-5 2xl:gap-16`}
+    >
       <div className={`col-span-6 flex flex-col lg:col-span-3`}>
         {show_options === "false" && billing_addresses?.length > 1 && (
           <SelectInput
@@ -492,7 +494,8 @@ export const CheckoutData = ({
                 target={`_blank`}
               >
                 <Link href="https://b2c.maximon.croonus.com/strana/opsti-uslovi-kupovine-alti-moda">
-                <span> opštim uslovima korišćenja</span></Link>
+                  <span> opštim uslovima korišćenja</span>
+                </Link>
               </a>{" "}
               ECOMMERCE ONLINE SHOP-a.
             </label>
@@ -504,9 +507,9 @@ export const CheckoutData = ({
           )}
         </div>
 
-            <div className="xl:hidden w-full">
-              <FreeDeliveryScale summary={dataSummary} />
-            </div>
+        <div className="xl:hidden w-full">
+          <FreeDeliveryScale summary={dataSummary} />
+        </div>
 
         <button
           disabled={isPending}
@@ -516,33 +519,48 @@ export const CheckoutData = ({
           hover:bg-black hover:text-white hover:border-black`}
           onClick={() => {
             let err = [];
-            (required ?? [])?.forEach((key) => {
-              //Error handling for countries
+            (required ?? []).forEach((key) => {
               if (!dataTmp[key] || dataTmp[key]?.length === 0) {
                 err.push(key);
               }
-              // if (
-              //   dataTmp.id_country_shipping == "-" ||
-              //   dataTmp.id_country_shipping == 0
-              // ) {
-              //   err = [...err, "id_country_shipping"];
-              // } else if (dataTmp.id_town_shipping === "") {
-              //   err = [...err, "id_town_shipping"];
-              // } else {
-              //   if (!dataTmp[key] || dataTmp[key]?.length === 0) {
-              //     err.push(key);
-              //   }
-              // }
             });
+
             setErrorsTmp(err);
-            if (err?.length === 0) {
+
+            if (err.length === 0) {
+              const productsOutOfStock = [];
+              items?.forEach((item) => {
+                if (!item?.product?.inventory?.inventory_defined) {
+                  productsOutOfStock.push({
+                    cart: {
+                      id: null,
+                      cart_item_id: item?.cart?.cart_item_id,
+                    },
+                    product: {
+                      name: item?.product?.basic_data?.name,
+                      sku: item?.product?.basic_data?.sku,
+                      slug: item?.product?.slug,
+                      image: item?.product?.image,
+                      id: item?.product?.id,
+                    },
+                  });
+                }
+              });
+
+              if (productsOutOfStock.length > 0) {
+                setPostErrors((prevErrors) => ({
+                  ...prevErrors,
+                  fields: productsOutOfStock,
+                }));
+                return;
+              }
+
               setDataTmp({
                 ...dataTmp,
                 gcaptcha: token,
               });
 
               const timeout = setTimeout(() => {
-                // pushToDataLayer("begin_checkout", items);
                 checkOut();
               }, 100);
 
@@ -623,13 +641,13 @@ const NoStockModal = ({
       <div
         className={`relative inset-0 m-auto h-fit w-fit rounded-md bg-white p-[1rem] max-sm:mx-2`}
       >
-        <Image
+        {/* <Image
           src={`/fail.png`}
           alt={`ecommerce`}
           width={100}
           height={100}
           className={`absolute -top-[3.15rem] left-0 right-0 mx-auto`}
-        />
+        /> */}
         <div className={`mt-[3rem] px-[0.25rem] md:px-9`}>
           <h3 className={`mt-4 text-center text-xl font-semibold ${className}`}>
             U korpi su proizvodi koji trenutno nisu na stanju.
@@ -643,7 +661,7 @@ const NoStockModal = ({
           >
             {(postErrors?.fields ?? [])?.map(
               ({
-                cart: { id, item_id },
+                cart: { id, cart_item_id },
                 product: { id: id_product, name, sku, slug, image },
                 errors,
               }) => {
@@ -652,7 +670,6 @@ const NoStockModal = ({
                 if (deleted_items_count === postErrors?.fields?.length) {
                   setPostErrors(null);
                 }
-
                 return (
                   <div
                     key={id}
@@ -660,7 +677,7 @@ const NoStockModal = ({
                   >
                     <Link href={`/${slug}`}>
                       <Image
-                        src={image?.[0]}
+                        src={image?.[0] ?? noImage}
                         alt={name ?? sku ?? slug ?? "Ecommerce"}
                         width={60}
                         height={100}
@@ -688,7 +705,7 @@ const NoStockModal = ({
                       </ul>
                       <button
                         onClick={async () => {
-                          await removeFromCart({ id: id_product });
+                          await removeFromCart({ id: cart_item_id });
                           //nakon brisanja, iz postErrors.fields filtriramo taj item i izbacujemo ga
                           let arr = [];
                           arr = (postErrors?.fields ?? [])?.filter(

@@ -169,7 +169,7 @@ export const useAddToCart = () => {
             });
             break;
           default:
-            toast.error("Greška prilikom dodavanja u korpu", {
+            toast.error(res.payload.message, {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: true,
@@ -221,14 +221,7 @@ export const useRemoveFromCart = () => {
   return useMutation({
     mutationKey: ["addToCart"],
     mutationFn: async ({ id }) => {
-      return await POST(`/cart`, {
-        id_product: +id,
-        quantity: 0,
-        id_product_parent: null,
-        description: null,
-        status: null,
-        quantity_calc_type: "calc",
-      }).then((res) => {
+      return await DELETE(`/cart/item/${id}`).then((res) => {
         switch (res?.code) {
           case 200:
             mutateCart();
@@ -286,7 +279,7 @@ export const useAddToWishlist = () => {
             });
             break;
           default:
-            toast.error("Greška prilikom dodavanja u listu želja.", {
+            toast.error(res.payload.message, {
               position: "top-center",
               autoClose: 2000,
               hideProgressBar: true,
@@ -1470,7 +1463,6 @@ export const useUpdateCartQuantity = () => {
               draggable: true,
             });
             throw new Error();
-            break;
         }
       });
     },

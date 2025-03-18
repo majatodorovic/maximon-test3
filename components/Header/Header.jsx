@@ -159,7 +159,14 @@ const Header = () => {
                   <button
                     key={index}
                     className={`
-                        font-light text-[20px] uppercase block relative w-fit text-black activeCategoryHover mx-5`}
+                        font-light text-[20px] uppercase block relative w-fit text-black activeCategoryHover mx-5  ${
+                          pathname?.includes(category?.slug) &&
+                          category?.id !== 0
+                            ? "activeCategory"
+                            : pathname === category?.slug && category?.id === 0
+                            ? "activeCategory"
+                            : ""
+                        }`}
                     onMouseEnter={() => {
                       setActiveCategory({
                         id:
@@ -189,7 +196,7 @@ const Header = () => {
                     onClick={() => resetActiveCategory()}
                   >
                     <span
-                      className={`font-light mx-5text-[16px] uppercase block text-black w-fit relative activeCategoryHover ${
+                      className={`font-light mx-5 text-[16px] uppercase block text-black w-fit relative  ${
                         pathname?.includes(category?.slug) && category?.id !== 0
                           ? "activeCategory"
                           : ""
@@ -206,7 +213,7 @@ const Header = () => {
                   onClick={resetActiveCategory}
                 >
                   <span
-                    className={`font-light mx-5 text-[20px] uppercase block text-black w-fit relative activeCategoryHover ${
+                    className={`font-light mx-5 text-[20px] uppercase block text-black w-fit relative  ${
                       pathname?.includes(category?.slug) && category?.id !== 0
                         ? "activeCategory"
                         : pathname === category?.slug && category?.id === 0
@@ -328,7 +335,8 @@ const Header = () => {
                         category?.id === activeCategory?.id
                           ? "activeCategory"
                           : "font-light"
-                      } mx-2 text-center text-[16px] hover:underline block text-white`}
+                      } mx-2 text-center text-[16px] hover:underline block text-white
+                      ${pathname?.includes(category?.slug) ? "underline" : ""}`}
                       onClick={() => {
                         setActiveCategory({
                           id: null,

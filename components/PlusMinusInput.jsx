@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { toast } from "react-toastify";
 import { Tooltip } from "@mui/material";
 import { useCart } from "@/hooks/ecommerce.hooks";
 import { useIsFetching } from "@tanstack/react-query";
@@ -13,12 +12,10 @@ const quantityInputStyle = {
 
 const PlusMinusInput = ({
   quantity,
-  maxAmount,
   setQuantity,
   updateCart,
   id,
   updatingCart,
-  updatingCartError,
   size,
 }) => {
   const { isFetching: isFetchingCart } = useCart();
@@ -26,33 +23,13 @@ const PlusMinusInput = ({
   const [showInputErrorToolTip, setShowInputErrorTooltip] = useState(false);
   const previousQuantity = useRef(quantity);
 
-  const quantityErrorMessageId = useId();
-  const showQuantitiyError = () => {
-    if (!toast.isActive(quantityErrorMessageId)) {
-      toast.error(`Na lageru trenutno nema željena količina artikala.`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        toastId: quantityErrorMessageId,
-      });
-    }
-  };
-
   const onPlus = () => {
     if (!isFetchingCart && !isFetchingSummary && !updatingCart) {
-      // if (quantity < maxAmount) {
-      // setQuantity(quantity + 1);
       updateCart({
         id: id,
         quantity: quantity + 1,
-        message: `Uspešno izmenjena količina.`,
         type: true,
       });
-      // } else {
-      //   showQuantitiyError();
-      // }
     }
   };
 
@@ -69,9 +46,7 @@ const PlusMinusInput = ({
         updateCart({
           id: id,
           quantity: inputValue,
-          message: `Uspešno izmenjena količina.`,
         });
-        // previousQuantity.current = Number(inputValue);
         setShowInputErrorTooltip(false);
       } else {
         setQuantity("");
@@ -89,7 +64,6 @@ const PlusMinusInput = ({
         updateCart({
           id: id,
           quantity: previousQuantity.current,
-          message: `Uspešno izmenjena količina.`,
         });
       }
     }
@@ -98,28 +72,14 @@ const PlusMinusInput = ({
   const onMinus = () => {
     if (!isFetchingCart && !isFetchingSummary && !updatingCart) {
       if (quantity > 1) {
-        // setQuantity(quantity - 1);
         updateCart({
           id: id,
           quantity: quantity - 1,
-          message: `Uspešno izmenjena količina.`,
           type: true,
         });
       }
     }
   };
-
-  useEffect(() => {
-    if (updatingCartError) {
-      updateCart({
-        id: id,
-        quantity: maxAmount,
-        message: `Uspešno izmenjena količina.`,
-        type: true,
-      });
-      showQuantitiyError();
-    }
-  }, [updatingCartError, maxAmount]);
 
   useEffect(() => {
     if (quantity !== "") {

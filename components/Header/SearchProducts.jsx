@@ -60,7 +60,7 @@ const SearchProducts = () => {
       {/* Container with the input field and dropdown */}
       {showSearch && (
         <div
-          className="py-0 w-[200px] bg-topHeader relative"
+          className="py-0 w-[220px] bg-topHeader relative"
           style={{ right: "-8px" }}
         >
           <form onSubmit={handleSearch}>
@@ -90,7 +90,7 @@ const SearchProducts = () => {
 
             {/* Search Results */}
             {debouncedSearch?.length >= 3 && (
-              <div className="absolute flex flex-col h-[420px] overflow-y-auto bg-white top-[30px] right-0 w-full border rounded-b-lg z-[200]">
+              <div className="absolute flex flex-col h-[420px] overflow-y-auto bg-white top-[30px] right-0 w-[320px] border rounded-b-lg z-[200]">
                 {searchData?.items?.length > 0 ? (
                   <div className="w-[95%] mx-auto mt-5 ">
                     <p className="text-[1rem] font-normal ">
@@ -117,10 +117,27 @@ const SearchProducts = () => {
                               <p className="text-[0.9rem] font-normal">
                                 {item?.basic_data?.name}
                               </p>
-                              <p className="text-[0.9rem] w-fit px-2 font-bold text-center">
-                                {currencyFormat(
-                                  item?.price?.price?.discount ??
-                                    item?.price?.price?.original
+                              <p className="text-[0.9rem] w-fit px-2 font-bold text-center flex gap-3">
+                                {item?.price?.min?.price_defined &&
+                                item?.price?.max?.price_defined ? (
+                                  `${currencyFormat(
+                                    item?.price?.min?.price?.original
+                                  )} - ${currencyFormat(
+                                    item?.price?.max?.price?.original
+                                  )}`
+                                ) : item?.price?.price?.discount ? (
+                                  <>
+                                    <del>
+                                      {currencyFormat(
+                                        item?.price?.price?.original
+                                      )}
+                                    </del>
+                                    {currencyFormat(
+                                      item?.price?.price?.discount
+                                    )}
+                                  </>
+                                ) : (
+                                  currencyFormat(item?.price?.price?.original)
                                 )}
                               </p>
                             </div>

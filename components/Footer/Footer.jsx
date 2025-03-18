@@ -184,11 +184,10 @@ const Footer = () => {
               <li>
                 <Link href="/prodajna-mesta">Prodajna mesta</Link>
               </li>
-              {/* 
+
               <li>
-                <Link href="/podaci-o-kompaniji">Podaci o kompaniji</Link>
+                <Link href="/strana/podaci-o-kompaniji">Podaci o kompaniji</Link>
               </li>
-              */}
             </ul>
           </div>
 
@@ -215,7 +214,9 @@ const Footer = () => {
               }  text-sm text-gray-600`}
             >
               <li>
-                <Link href="/strana/kako-kupiti-online">Kako kupiti online</Link>
+                <Link href="/strana/kako-kupiti-online">
+                  Kako kupiti online
+                </Link>
               </li>
               <li>
                 <Link href="/strana/reklamacije">Reklamacije</Link>
@@ -265,13 +266,15 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/politika-privatnosti">Politika privatnosti</Link>
+                <Link href="/strana/politika-privatnosti">
+                  Politika privatnosti
+                </Link>
               </li>
               <li>
-                <Link href="/politika-kolacica">Politika kolačića</Link>
+                <Link href="/strana/politika-kolacica">Politika kolačića</Link>
               </li>
               <li>
-                <Link href="/autorska-prava">Autorska prava</Link>
+                <Link href="/strana/autorska-prava">Autorska prava</Link>
               </li>
             </ul>
           </div>

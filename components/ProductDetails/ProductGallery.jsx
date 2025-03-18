@@ -7,14 +7,13 @@ import "swiper/css/thumbs";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 
-
 import { FreeMode, Navigation, Pagination, Thumbs, Zoom } from "swiper/modules";
 import Image from "next/image";
 import { convertHttpToHttps } from "@/helpers/convertHttpToHttps";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { get } from "@/api/api";
 import { useSearchParams } from "next/navigation";
-import noImage from '../../public/images/no-image-maximon.webp'
+import noImage from "../../public/images/no-image-maximon.webp";
 
 export const ProductGallery = ({ slug, color }) => {
   const [loading, setLoading] = useState(false);
@@ -28,16 +27,18 @@ export const ProductGallery = ({ slug, color }) => {
     refetchOnWindowFocus: false,
   });
 
-  
-
   const [gallery, setGallery] = useState(productGallery?.gallery || []);
 
   const params = useSearchParams();
   // const color = params?.get("color");
 
-  function ImageMagnifier({ src, onClick = () => {},    magnifierHeight = 300,
-  magnifierWidth = 300,
-  zoomLevel = 2.5, }) {
+  function ImageMagnifier({
+    src,
+    onClick = () => {},
+    magnifierHeight = 300,
+    magnifierWidth = 300,
+    zoomLevel = 2.5,
+  }) {
     const [[x, y], setXY] = useState([0, 0]);
 
     const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
@@ -85,28 +86,6 @@ export const ProductGallery = ({ slug, color }) => {
           width={22}
           height={22}
         />
-        <div
-          style={{
-            display: showMagnifier ? "" : "none",
-            position: "absolute",
-            pointerEvents: "none",
-            height: `${magnifierHeight}px`,
-            width: `${magnifierWidth}px`,
-            top: `${y - magnifierHeight / 2}px`,
-            left: `${x - magnifierWidth / 2}px`,
-            opacity: "1",
-            border: "1px solid lightgray",
-            borderRadius: "50%",
-            backgroundColor: "white",
-            backgroundImage: `url('${src}')`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: `${imgWidth * zoomLevel}px ${
-              imgHeight * zoomLevel
-            }px`,
-            backgroundPositionX: `${-x * zoomLevel + magnifierWidth / 2}px`,
-            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
-          }}
-        ></div>
       </div>
     );
   }
@@ -126,26 +105,28 @@ export const ProductGallery = ({ slug, color }) => {
   //     </SwiperSlide>
   //   );
   // });
-  const productImage = gallery?.length > 0 ? (
-    gallery?.map((image, index) => {
-      const imageUrl = convertHttpToHttps(image?.image) || noImage; // fallback to noImage if image is missing
+  const productImage =
+    gallery?.length > 0 ? (
+      gallery?.map((image, index) => {
+        const imageUrl = convertHttpToHttps(image?.image) || noImage; // fallback to noImage if image is missing
 
-      return (
-        <SwiperSlide key={index} className="w-full relative">
-          <ImageMagnifier
-            src={imageUrl}
-            onClick={() => {
-              setModalImage(image?.image);
-            }}
-          />
-        </SwiperSlide>
-      );
-    })
-  ) : (
-    <SwiperSlide>
-      <Image src={noImage} /> {/* Render the fallback image if gallery is empty */}
-    </SwiperSlide>
-  );
+        return (
+          <SwiperSlide key={index} className="w-full relative">
+            <ImageMagnifier
+              src={imageUrl}
+              onClick={() => {
+                setModalImage(image?.image);
+              }}
+            />
+          </SwiperSlide>
+        );
+      })
+    ) : (
+      <SwiperSlide>
+        <Image src={noImage} />{" "}
+        {/* Render the fallback image if gallery is empty */}
+      </SwiperSlide>
+    );
 
   const thumbImage = gallery?.map((image, index) => {
     return (
@@ -206,28 +187,27 @@ export const ProductGallery = ({ slug, color }) => {
   useEffect(() => {
     if (color) {
       setLoading(true);
-  
+
       // Filter images based on the selected color or variant key
       const newImages = productGallery?.gallery?.filter((item) =>
         item?.variant_key?.includes(color)
       );
-  
+
       // Use a Set to track unique attribute_keys
       const seenAttributeKeys = new Set();
       const filteredImages = [];
-  
+
       // Loop through the images and keep only the first image for each unique attribute_key
       newImages.forEach((item) => {
         const variant = item?.variant_key_array?.[0]; // Use the first variant (or any you prefer)
-  
+
         if (variant && !seenAttributeKeys.has(variant?.attribute_key)) {
           seenAttributeKeys.add(variant?.attribute_key);
           filteredImages.push(item); // Add the image to the result
         }
       });
-  
+
       setGallery(filteredImages); // Set the gallery to the filtered images
-  
     }
     if (productGallery?.gallery?.length) {
       setTimeout(() => {
@@ -367,11 +347,23 @@ export const ProductGallery = ({ slug, color }) => {
             swiper?.slideNext();
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" onClick={() => {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+            onClick={() => {
               swiper?.slideNext();
-            }}>
-  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-</svg>
+            }}
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
+          </svg>
 
           {/* <i
             className={`fa-thin fa-chevron-down`}
@@ -388,11 +380,23 @@ export const ProductGallery = ({ slug, color }) => {
             swiper?.slidePrev();
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" onClick={() => {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+            onClick={() => {
               swiper?.slidePrev();
-            }}>
-  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-</svg>
+            }}
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+            />
+          </svg>
 
           {/* <i
             className={`fa-thin fa-chevron-up`}
@@ -400,81 +404,6 @@ export const ProductGallery = ({ slug, color }) => {
           ></i> */}
         </div>
       </Swiper>
-
-      {modalImage && (
-        <div
-          className={`fixed top-0 left-0 w-full h-full bg-black/80 z-[999999] flex items-center justify-center overflow-y-auto`}
-        >
-          <div className="relative w-[30%] max-md:w-full h-[70%]">
-            <Swiper
-              modules={[Pagination, Zoom]}
-              pagination={true}
-              direction={"vertical"}
-              zoom={{
-                maxRatio: 2.5,
-                toggle: true,
-                minRatio: 1,
-              }}
-              initialSlide={productGallery?.gallery?.findIndex(
-                (item) => item?.image === modalImage
-              )}
-              className={`modalSwiper w-full h-full swiper-zoom-container`}
-              breakpoints={{
-                0: {
-                  direction: "vertical",
-                  slidesPerView: 1,
-                  pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                    enabled: true,
-                    bulletClass: "swiper-pagination-bullet",
-                    bulletActiveClass: "swiper-pagination-bullet-active",
-                  },
-                },
-              }}
-            >
-              {productGallery?.gallery?.map((image, index) => {
-                return (
-                  <SwiperSlide
-                    key={`${slug}-${index}-product-image-first-swiper`}
-                    className="w-full"
-                  >
-                    <div className="swiper-zoom-container">
-                      <Image
-                        src={image?.image || noImage}
-                        alt={image?.image}
-                        layout="fill"
-                        objectFit="contain"
-                        priority={true}
-                        className="cursor-pointer max-h-screen w-auto mx-auto"
-                      />
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-            <Image
-            src={"/icons/cancel.png"}
-            className="px-2 py-1 text-xl cursor-pointer absolute top-3 right-3 z-50"
-            width={42}
-            height={42}
-            alt="cancel gallery"
-            onClick={() => {
-              setModalImage(null);
-            }}
-          />
-          </div>
-
-          
-          <div
-            className="fixed z-[-100] bg-black bg-opacity-40 top-0 left-0 w-screen h-screen transition-all duration-500"
-            onClick={() => {
-              setModalImage(null);
-            }}
-          ></div>
-
-        </div>
-      )}
     </div>
   );
 };
