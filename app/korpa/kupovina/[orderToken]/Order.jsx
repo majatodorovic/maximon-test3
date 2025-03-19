@@ -166,16 +166,15 @@ const Success = ({
             className={`mt-5 flex flex-col gap-2 rounded-lg bg-[#f7f7f7] p-2`}
           >
             <h3 className={`${className} text-base font-light`}>
-              Prodavac: <span className={`font-normal`}>Alti Moda doo Čačak</span>
+              Prodavac:{" "}
+              <span className={`font-normal`}>Alti Moda doo Čačak</span>
             </h3>
             <h3 className={`${className} text-base font-light`}>
               PIB: <span className={`font-normal`}>112766359</span>
             </h3>
             <h3 className={`${className} text-base font-light`}>
               Adresa:{" "}
-              <span className={`font-normal`}>
-              Radnička 1 32000 Čačak
-              </span>
+              <span className={`font-normal`}>Rudnička 1 32000 Čačak</span>
             </h3>
           </div>
         </div>
