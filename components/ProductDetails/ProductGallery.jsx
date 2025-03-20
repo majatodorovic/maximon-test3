@@ -79,13 +79,6 @@ export const ProductGallery = ({ slug, color }) => {
             setShowMagnifier(false);
           }}
         />
-        <Image
-          src={"/icons/diagonal-arrow.png"}
-          alt="back button"
-          className="absolute right-4 top-4 z-10 cursor-pointer"
-          width={22}
-          height={22}
-        />
       </div>
     );
   }
@@ -333,7 +326,7 @@ export const ProductGallery = ({ slug, color }) => {
           },
         }}
         freeMode={true}
-        className={` m-auto w-1/4 h-full max-md:hidden !relative`}
+        className={` m-auto w-1/4 h-full max-md:hidden !relative !py-[30px]`}
       >
         {thumbImage}
         <div
